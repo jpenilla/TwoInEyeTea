@@ -1,0 +1,11 @@
+/*-API/
+/*-Server/
+
+/last-*
+/build/
+/.gradle
+/*paperclip.jar
+/.idea
+/mcdevimports.conf
+/mcdevimports-dump.conf
+/run/
