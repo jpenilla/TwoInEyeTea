@@ -1,15 +1,12 @@
-import xyz.jpenilla.toothpick.gitCmd
-import xyz.jpenilla.toothpick.toothpick
-
 plugins {
     `java-library`
-    id("xyz.jpenilla.toothpick") version "1.0.0-SNAPSHOT"
+    id("xyz.jpenilla.toothpick")
 }
 
 toothpick {
     forkName = "TwoInEyeTea"
     groupId = "xyz.jpenilla"
-    val versionTag = '"' + (gitCmd("rev-parse", "--short", "HEAD").output ?: "UNKNOWN") + '"'
+    val versionTag = "\"${commitHash() ?: error("Could not obtain git hash")}\""
     forkVersion = "git-$forkName-$versionTag"
     forkUrl = "https://github.com/jpenilla/TwoInEyeTea"
 
@@ -21,11 +18,11 @@ toothpick {
     upstreamBranch = "origin/master"
 
     server {
-        project = project(":$forkNameLowercase-server")
+        project = projects.twoineyeteaServer.dependencyProject
         patchesDir = file("patches/server")
     }
     api {
-        project = project(":$forkNameLowercase-api")
+        project = projects.twoineyeteaApi.dependencyProject
         patchesDir = file("patches/api")
     }
 }

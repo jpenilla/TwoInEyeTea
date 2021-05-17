@@ -1,3 +1,8 @@
+[submodule "Toothpick"]
+	path = Toothpick
+	url = https://github.com/jpenilla/Toothpick.git
+	branch = jackson
 [submodule "Tuinity"]
 	path = Tuinity
 	url = https://github.com/Spottedleaf/Tuinity.git
+	branch = master
