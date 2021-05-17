@@ -1,0 +1,105 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: jmp <jasonpenilla2@me.com>
+Date: Fri, 16 Apr 2021 20:38:55 -0700
+Subject: [PATCH] Add option to use true rgb color of NamedTextColors instead
+ of using terminal color scheme
+
+
+diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
+index efc1e42d606e1c9feb1a4871c0714933ae92a1b2..73461b4e875dcbf291c496263723926b9b45c85d 100644
+--- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
++++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
+@@ -482,8 +482,10 @@ public class PaperConfig {
+ 
+     public static boolean enableBrigadierConsoleHighlighting = true;
+     public static boolean enableBrigadierConsoleCompletions = true;
++    public static boolean useTrueColorForNamedTextColors = false;
+     private static void consoleSettings() {
+         enableBrigadierConsoleHighlighting = getBoolean("settings.console.enable-brigadier-highlighting", enableBrigadierConsoleHighlighting);
+         enableBrigadierConsoleCompletions = getBoolean("settings.console.enable-brigadier-completions", enableBrigadierConsoleCompletions);
++        useTrueColorForNamedTextColors = getBoolean("settings.console.use-true-color-for-named-text-colors", useTrueColorForNamedTextColors);
+     }
+ }
+diff --git a/src/main/java/io/papermc/paper/console/HexFormattingConverter.java b/src/main/java/io/papermc/paper/console/HexFormattingConverter.java
+index a4315961b7a465fb4872a4d67e7c26d4b4ed1fb9..75e88a93618c4dc99f7152628fea4b40d46810eb 100644
+--- a/src/main/java/io/papermc/paper/console/HexFormattingConverter.java
++++ b/src/main/java/io/papermc/paper/console/HexFormattingConverter.java
+@@ -1,5 +1,7 @@
+ package io.papermc.paper.console;
+ 
++import com.destroystokyo.paper.PaperConfig; // TwoInEyeTea
++import net.kyori.adventure.text.format.NamedTextColor; // TwoInEyeTea
+ import net.minecrell.terminalconsole.TerminalConsoleAppender;
+ import org.apache.logging.log4j.core.LogEvent;
+ import org.apache.logging.log4j.core.config.Configuration;
+@@ -35,7 +37,33 @@ public final class HexFormattingConverter extends LogEventPatternConverter {
+     private static final Pattern NAMED_PATTERN = Pattern.compile(COLOR_CHAR + "[0-9a-fk-orA-FK-OR]");
+     private static final Pattern RGB_PATTERN = Pattern.compile(COLOR_CHAR + "x(" + COLOR_CHAR + "[0-9a-fA-F]){6}");
+ 
+-    private static final String[] ansiCodes = new String[] {
++    // TwoInEyeTea start
++    private static final String[] RGB_ANSI_CODES = new String[]{
++        formatHexAnsi(NamedTextColor.BLACK.value()),         // Black §0
++        formatHexAnsi(NamedTextColor.DARK_BLUE.value()),     // Dark Blue §1
++        formatHexAnsi(NamedTextColor.DARK_GREEN.value()),    // Dark Green §2
++        formatHexAnsi(NamedTextColor.DARK_AQUA.value()),     // Dark Aqua §3
++        formatHexAnsi(NamedTextColor.DARK_RED.value()),      // Dark Red §4
++        formatHexAnsi(NamedTextColor.DARK_PURPLE.value()),   // Dark Purple §5
++        formatHexAnsi(NamedTextColor.GOLD.value()),          // Gold §6
++        formatHexAnsi(NamedTextColor.GRAY.value()),          // Gray §7
++        formatHexAnsi(NamedTextColor.DARK_GRAY.value()),     // Dark Gray §8
++        formatHexAnsi(NamedTextColor.BLUE.value()),          // Blue §9
++        formatHexAnsi(NamedTextColor.GREEN.value()),         // Green §a
++        formatHexAnsi(NamedTextColor.AQUA.value()),          // Aqua §b
++        formatHexAnsi(NamedTextColor.RED.value()),           // Red §c
++        formatHexAnsi(NamedTextColor.LIGHT_PURPLE.value()),  // Light Purple §d
++        formatHexAnsi(NamedTextColor.YELLOW.value()),        // Yellow §e
++        formatHexAnsi(NamedTextColor.WHITE.value()),         // White §f
++        "\u001B[5m",                                         // Obfuscated §k
++        "\u001B[21m",                                        // Bold §l
++        "\u001B[9m",                                         // Strikethrough §m
++        "\u001B[4m",                                         // Underline §n
++        "\u001B[3m",                                         // Italic §o
++        ANSI_RESET,                                          // Reset §r
++    };
++    private static final String[] ANSI_ANSI_CODES = new String[] {
++    // TwoInEyeTea end
+         "\u001B[0;30m",    // Black §0
+         "\u001B[0;34m",    // Dark Blue §1
+         "\u001B[0;32m",    // Dark Green §2
+@@ -100,10 +128,7 @@ public final class HexFormattingConverter extends LogEventPatternConverter {
+         while (matcher.find()) {
+             String s = matcher.group().replace(String.valueOf(COLOR_CHAR), "").replace('x', '#');
+             int hex = Integer.decode(s);
+-            int red = (hex >> 16) & 0xFF;
+-            int green = (hex >> 8) & 0xFF;
+-            int blue = hex & 0xFF;
+-            String replacement = String.format(RGB_ANSI, red, green, blue);
++            final String replacement = formatHexAnsi(hex); // TwoInEyeTea
+             matcher.appendReplacement(buffer, replacement);
+         }
+         matcher.appendTail(buffer);
+@@ -134,6 +159,7 @@ public final class HexFormattingConverter extends LogEventPatternConverter {
+ 
+         Matcher matcher = NAMED_PATTERN.matcher(content);
+         StringBuffer buffer = new StringBuffer();
++        final String[] ansiCodes = PaperConfig.useTrueColorForNamedTextColors ? RGB_ANSI_CODES : ANSI_ANSI_CODES; // TwoInEyeTea
+         while (matcher.find()) {
+             int format = LOOKUP.indexOf(Character.toLowerCase(matcher.group().charAt(1)));
+             if (format != -1) {
+@@ -149,6 +175,15 @@ public final class HexFormattingConverter extends LogEventPatternConverter {
+         }
+     }
+ 
++    // TwoInEyeTea start
++    private static String formatHexAnsi(final int color) {
++        final int red = color >> 16 & 0xFF;
++        final int green = color >> 8 & 0xFF;
++        final int blue = color & 0xFF;
++        return String.format(RGB_ANSI, red, green, blue);
++    }
++    // TwoInEyeTea end
++
+     /**
+      * Gets a new instance of the {@link HexFormattingConverter} with the
+      * specified options.
