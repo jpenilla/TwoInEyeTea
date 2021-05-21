@@ -5,12 +5,12 @@ Subject: [PATCH] Remove server gui
 
 
 diff --git a/src/main/java/net/minecraft/server/Main.java b/src/main/java/net/minecraft/server/Main.java
-index 6818f8496ab76ee6ffc747bd6848b43830ec8914..fe53b61ac6592429a3b1f9633fdeceeabd3fd0bc 100644
+index 15b972b4a93b8fe3655acec47bc84b0f2c4620a6..63895731234d19cfc2ef1ede3098f9f5a5364ff8 100644
 --- a/src/main/java/net/minecraft/server/Main.java
 +++ b/src/main/java/net/minecraft/server/Main.java
-@@ -234,7 +234,7 @@ public class Main {
-                 boolean flag1 = !optionset.has("nogui") && !optionset.nonOptionArguments().contains("nogui");
+@@ -236,7 +236,7 @@ public class Main {
  
+                 if(!Boolean.parseBoolean(System.getenv().getOrDefault("PAPER_DISABLE_SERVER_GUI", String.valueOf(false)))) // Paper
                  if (flag1 && !GraphicsEnvironment.isHeadless()) {
 -                    dedicatedserver1.bd();
 +                    //dedicatedserver1.bd();

@@ -4,5 +4,5 @@
 	branch = jackson
 [submodule "Tuinity"]
 	path = Tuinity
-	url = https://github.com/Spottedleaf/Tuinity.git
+	url = https://github.com/Tuinity/Tuinity.git
 	branch = master
