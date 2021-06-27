@@ -1,15 +1,15 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: jmp <jasonpenilla2@me.com>
+From: Jason Penilla <11360596+jpenilla@users.noreply.github.com>
 Date: Fri, 16 Apr 2021 20:38:55 -0700
 Subject: [PATCH] Add option to use true rgb color of NamedTextColors instead
  of using terminal color scheme
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index efc1e42d606e1c9feb1a4871c0714933ae92a1b2..73461b4e875dcbf291c496263723926b9b45c85d 100644
+index 73652e403eaa419fb5b4b54bd506f246c0aa4e99..beb60e1d2ae4610051400cc88ce444590a485576 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-@@ -482,8 +482,10 @@ public class PaperConfig {
+@@ -482,9 +482,11 @@ public class PaperConfig {
  
      public static boolean enableBrigadierConsoleHighlighting = true;
      public static boolean enableBrigadierConsoleCompletions = true;
@@ -19,7 +19,8 @@ index efc1e42d606e1c9feb1a4871c0714933ae92a1b2..73461b4e875dcbf291c496263723926b
          enableBrigadierConsoleCompletions = getBoolean("settings.console.enable-brigadier-completions", enableBrigadierConsoleCompletions);
 +        useTrueColorForNamedTextColors = getBoolean("settings.console.use-true-color-for-named-text-colors", useTrueColorForNamedTextColors);
      }
- }
+ 
+     public static boolean deobfuscateStacktraces = true;
 diff --git a/src/main/java/io/papermc/paper/console/HexFormattingConverter.java b/src/main/java/io/papermc/paper/console/HexFormattingConverter.java
 index a4315961b7a465fb4872a4d67e7c26d4b4ed1fb9..75e88a93618c4dc99f7152628fea4b40d46810eb 100644
 --- a/src/main/java/io/papermc/paper/console/HexFormattingConverter.java

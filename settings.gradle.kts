@@ -1,16 +1,12 @@
-import xyz.jpenilla.toothpick.setupToothpickProject
-import java.util.Locale
-
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
-    includeBuild("Toothpick")
+    repositories {
+        gradlePluginPortal()
+        maven("https://papermc.io/repo/repository/maven-public/")
+    }
 }
 
-plugins {
-    id("xyz.jpenilla.toothpick.settings")
-}
+rootProject.name = "TwoInEyeTea"
 
-val forkName = "TwoInEyeTea"
-rootProject.name = forkName.toLowerCase(Locale.ROOT)
-setupToothpickProject(rootProject, forkName)
+include("TwoInEyeTea-API", "TwoInEyeTea-Server")

@@ -1,19 +1,19 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: jmp <jasonpenilla2@me.com>
+From: Jason Penilla <11360596+jpenilla@users.noreply.github.com>
 Date: Sat, 21 Nov 2020 00:41:55 -0800
 Subject: [PATCH] Remove server gui
 
 
 diff --git a/src/main/java/net/minecraft/server/Main.java b/src/main/java/net/minecraft/server/Main.java
-index 15b972b4a93b8fe3655acec47bc84b0f2c4620a6..63895731234d19cfc2ef1ede3098f9f5a5364ff8 100644
+index 75c31ec2553c0959f1ac34b554a39a73144da8bd..6bb67b8e6546929b55ad5f4c6effe2b890d82361 100644
 --- a/src/main/java/net/minecraft/server/Main.java
 +++ b/src/main/java/net/minecraft/server/Main.java
-@@ -236,7 +236,7 @@ public class Main {
+@@ -242,7 +242,7 @@ public class Main { //
  
                  if(!Boolean.parseBoolean(System.getenv().getOrDefault("PAPER_DISABLE_SERVER_GUI", String.valueOf(false)))) // Paper
                  if (flag1 && !GraphicsEnvironment.isHeadless()) {
--                    dedicatedserver1.bd();
-+                    //dedicatedserver1.bd();
+-                    dedicatedserver1.showGui();
++                    //dedicatedserver1.showGui(); // TwoInEyeTea
                  }
  
                  if (optionset.has("port")) {

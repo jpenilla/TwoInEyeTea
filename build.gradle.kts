@@ -1,39 +1,72 @@
+import io.papermc.paperweight.util.Constants
+
 plugins {
-    `java-library`
-    id("xyz.jpenilla.toothpick")
+    java
+    id("com.github.johnrengelman.shadow") version "7.0.0" apply false
+    id("io.papermc.paperweight.patcher") version "1.1.6"
 }
 
-toothpick {
-    forkName = "TwoInEyeTea"
-    groupId = "xyz.jpenilla"
-    val versionTag = "\"${commitHash() ?: error("Could not obtain git hash")}\""
-    forkVersion = "git-$forkName-$versionTag"
-    forkUrl = "https://github.com/jpenilla/TwoInEyeTea"
-
-    minecraftVersion = "1.16.5"
-    nmsPackage = "1_16_R3"
-    nmsRevision = "R0.1-SNAPSHOT"
-
-    upstream = "Tuinity"
-    upstreamBranch = "origin/master"
-
-    server {
-        project = projects.twoineyeteaServer.dependencyProject
-        patchesDir = file("patches/server")
+repositories {
+    mavenCentral()
+    maven("https://papermc.io/repo/repository/maven-public/") {
+        content { onlyForConfigurations(Constants.PAPERCLIP_CONFIG) }
     }
-    api {
-        project = projects.twoineyeteaApi.dependencyProject
-        patchesDir = file("patches/api")
+    maven("https://maven.quiltmc.org/repository/release/") {
+        content { onlyForConfigurations(Constants.REMAPPER_CONFIG) }
     }
+}
+
+dependencies {
+    remapper("org.quiltmc:tiny-remapper:0.4.1")
+    paperclip("io.papermc:paperclip:2.0.1")
 }
 
 subprojects {
-    repositories {
-        maven("https://nexus.velocitypowered.com/repository/velocity-artifacts-snapshots/")
-    }
+    apply(plugin = "java")
 
     java {
-        sourceCompatibility = JavaVersion.toVersion(8)
-        targetCompatibility = JavaVersion.toVersion(8)
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(16))
+        }
     }
+
+    tasks.withType<JavaCompile> {
+        options.encoding = Charsets.UTF_8.name()
+        options.release.set(16)
+    }
+    tasks.withType<Javadoc> {
+        options.encoding = Charsets.UTF_8.name()
+    }
+    tasks.withType<ProcessResources> {
+        filteringCharset = Charsets.UTF_8.name()
+    }
+
+    repositories {
+        mavenCentral()
+        maven("https://oss.sonatype.org/content/groups/public/")
+        maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://ci.emc.gs/nexus/content/groups/aikar/")
+        maven("https://repo.aikar.co/content/groups/aikar")
+        maven("https://repo.md-5.net/content/repositories/releases/")
+        maven("https://hub.spigotmc.org/nexus/content/groups/public/")
+    }
+}
+
+paperweight {
+    serverProject.set(project(":TwoInEyeTea-Server"))
+
+    useStandardUpstream("tuinity") {
+        url.set(github("Tuinity", "Tuinity"))
+        ref.set(file("current-tuinity").readText().trim())
+        withStandardPatcher {
+            baseName("Tuinity")
+            apiOutputDir.set(layout.projectDirectory.dir("TwoInEyeTea-API"))
+            serverOutputDir.set(layout.projectDirectory.dir("TwoInEyeTea-Server"))
+        }
+    }
+}
+
+tasks.paperclipJar {
+    destinationDirectory.set(rootProject.layout.projectDirectory)
+    archiveFileName.set("twoineyetea-paperclip.jar")
 }

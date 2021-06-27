@@ -1,14 +1,38 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: jmp <jasonpenilla2@me.com>
+From: Jason Penilla <11360596+jpenilla@users.noreply.github.com>
 Date: Fri, 16 Apr 2021 17:52:19 -0700
 Subject: [PATCH] Rebrand
 
 
+diff --git a/build.gradle.kts b/build.gradle.kts
+index c2005f46b6cf2d7f80f65dc52f9ff7cd03d0419f..f81f524d7865f65ff54cc437fce38ce1adacaa29 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -30,8 +30,8 @@ repositories {
+ }
+ 
+ dependencies {
+-    implementation(project(":Tuinity-API")) // Tuinity
+-    implementation("com.destroystokyo.paper:paper-mojangapi:1.16.5-R0.1-SNAPSHOT") // Tuinity
++    implementation(projects.twoInEyeTeaAPI) // Tuinity // TwoInEyeTea
++    implementation("io.papermc.paper:paper-mojangapi:1.17-R0.1-SNAPSHOT") // Tuinity // TwoInEyeTea
+     // Paper start
+     implementation("org.jline:jline-terminal-jansi:3.12.1")
+     implementation("net.minecrell:terminalconsoleappender:1.2.0")
+@@ -82,7 +82,7 @@ tasks.jar {
+         attributes(
+             "Main-Class" to "org.bukkit.craftbukkit.Main",
+             "Implementation-Title" to "CraftBukkit",
+-            "Implementation-Version" to "git-Tuinity-$implementationVersion", // Tuinity
++            "Implementation-Version" to "git-TwoInEyeTea-$implementationVersion", // Tuinity // TwoInEyeTea
+             "Implementation-Vendor" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(Date()), // Paper
+             "Specification-Title" to "Bukkit",
+             "Specification-Version" to project.version,
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index 7063f1da3654b382e26b0093ad5d0ff04a2b38c2..f3f1290d1689340461e75c0d0511240317ecfe37 100644
+index d50b61876f15d95b836b3dd81d9c3492c91a8448..dff7e3cc1d7dd07280fa806fd99ae993eb8f2f3b 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-@@ -28,8 +28,8 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -29,8 +29,8 @@ public class PaperVersionFetcher implements VersionFetcher {
      @Nonnull
      @Override
      public Component getVersionMessage(@Nonnull String serverVersion) {
@@ -20,27 +44,27 @@ index 7063f1da3654b382e26b0093ad5d0ff04a2b38c2..f3f1290d1689340461e75c0d05112403
  
          return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 72d1c1202581abc284848000663ada5514cfcb15..5ac5926a86a4f9ab5370e2ced38020a0b837a50e 100644
+index f3bf6270c7735869083559f907c65d95144dbe6f..1fb7d623ff7372a63b7369cd5864184ddfbb41a5 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1649,7 +1649,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
-     }
+@@ -1714,7 +1714,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
+     @DontObfuscate
      public String getServerModName() {
--        return "Tuinity"; // Tuinity //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
-+        return "TwoInEyeTea"; // TwoInEyeTea // Tuinity //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
+-        return "Tuinity"; // Tuinity - Tuinity > //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return "TwoInEyeTea"; // TwoInEyeTea // Tuinity - Tuinity > //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
      }
  
-     public CrashReport b(CrashReport crashreport) {
+     public SystemReport fillSystemReport(SystemReport systemreport) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 0e9819a7da160e7a5f28734c4dd3b673c8881792..41d54558e72c19b0ee668e72b0280c31b6569a0a 100644
+index 2aa45667054a721465f353f0500e30d90f7d16a4..de675b664d63543696a7fd3a8655a484182e553b 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -230,7 +230,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
--    private final String serverName = "Tuinity"; // Paper // Tuinity
+-    private final String serverName = "Tuinity"; // Tuinity // Paper
 +    private final String serverName = "TwoInEyeTea"; // Paper // Tuinity // TwoInEyeTea
      private final String serverVersion;
      private final String bukkitVersion = Versioning.getBukkitVersion();
